@@ -444,8 +444,11 @@ class WavAudio(object):
     @classmethod
     def read_file(cls, filename, realtime=False):
         """ Yields raw audio blocks from wav file, terminated by a None element. """
-        if not os.path.isfile(filename):
-            raise IOError("'%s' is not a file. Please use a different file path.")
+        try:
+            if not os.path.isfile(filename):
+                raise IOError("'%s' is not a file. Please use a different file path.")
+        except TypeError:
+            pass # Allow file-like objects
 
         with contextlib.closing(wave.open(filename, 'rb')) as file:
             # Validate the wave file's header
